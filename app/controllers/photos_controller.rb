@@ -27,10 +27,13 @@ before_action :redirect_if_not_signed_in
     end
 
     def update
+      raise params.inspect
       @photo = Photo.find(params[:id])
       if @photo.update_attributes(params[:photo].permit(:crop_x,:crop_y,:crop_w,:crop_h))
         if !params[:photo].blank?
           flash[:notice] = "Successfully updated photo."
+          @photo.cropped = true
+          @photo.save
           redirect_to '/'
         else
           render :action => "crop"
